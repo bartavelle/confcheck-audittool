@@ -22,9 +22,9 @@ import Text.XML.Expat.Tree (NodeG(..), Attributes)
 import Data.Thyme
 import Data.Maybe
 
-import Analyzis.Types
-import Analyzis.Common
-import Analyzis.Windows.ACE
+import Analysis.Types
+import Analysis.Common
+import Analysis.Windows.ACE
 
 import qualified Data.Parsers.FastText as PF
 import qualified Text.Parser.Char as P
