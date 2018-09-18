@@ -2,7 +2,7 @@ name:                audittool
 version:             0.1.0.0
 synopsis:            Parses the audittool output.
 description:         Please see README.md
-homepage:            https://github.com/bartavelle/audittool#readme
+homepage:            https://github.com/bartavelle/confcheck-audittool#readme
 license:             AGPL-3.0-only
 license-file:        LICENSE
 author:              Simon Marechal
