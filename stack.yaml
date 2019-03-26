@@ -2,11 +2,11 @@ flags: {}
 packages:
  - .
  - '../confcheck-types'
-resolver: lts-10.6
+resolver: lts-13.14
 extra-deps:
-  - hexpat-lens-0.1.7
+  - hexpat-lens-0.1.8
   - hexpat-tagsoup-0.1
   - elm-bridge-0.4.3
-  - fastparser-0.3.1.1
+  - fastparser-0.3.1.2
 
 

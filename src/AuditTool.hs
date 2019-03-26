@@ -208,7 +208,7 @@ extractFromReport :: [Node] -> [ConfigInfo]
 extractFromReport n = execWriter $ do
     let n' = mkNodeMap n
     forM_ (n' ^? ix "audittool_infos") (adInfo . mkKV)
-    sidMap <- HM.fromList . catMaybes <$> mapM mkSidInfo (n' ^.. ix "sid_base" . childnamed "value")
+    _ <- HM.fromList . catMaybes <$> mapM mkSidInfo (n' ^.. ix "sid_base" . childnamed "value")
     sdMap <- HM.fromList . catMaybes <$> mapM mkSd (n' ^.. ix "sd_base" . childnamed "sd")
     forM_ (n' ^? ix "system" . toNodeMap) adSystem
     hivemap <- HM.fromList . catMaybes <$> forM (n' ^.. ix "hives" ./ named "hive") adHives
