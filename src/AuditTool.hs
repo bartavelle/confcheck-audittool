@@ -1,33 +1,33 @@
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE RankNTypes #-}
-{-# LANGUAGE TupleSections #-}
+{-# LANGUAGE RankNTypes        #-}
+{-# LANGUAGE TupleSections     #-}
 module AuditTool
     ( parseAuditTool
     ) where
 
-import qualified Data.ByteString.Lazy as BSL
-import qualified Data.HashMap.Lazy as HM
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Data.Text.Encoding as T
-import qualified Data.ByteString.Base16 as B16
-import qualified Data.Textual as TX
+import qualified Data.ByteString.Base16      as B16
+import qualified Data.ByteString.Lazy        as BSL
+import qualified Data.HashMap.Lazy           as HM
+import           Data.Text                   (Text)
+import qualified Data.Text                   as T
+import qualified Data.Text.Encoding          as T
+import qualified Data.Textual                as TX
 
-import Control.Applicative
-import Control.Monad
-import Control.Monad.Writer.Strict
-import Control.Lens hiding (children)
-import Text.XML.Expat.Lens
-import Text.XML.Expat.Tree (NodeG(..), Attributes)
-import Data.Thyme
-import Data.Maybe
+import           Control.Applicative
+import           Control.Lens                hiding (children)
+import           Control.Monad
+import           Control.Monad.Writer.Strict
+import           Data.Maybe
+import           Data.Thyme
+import           Text.XML.Expat.Lens
+import           Text.XML.Expat.Tree         (Attributes, NodeG (..))
 
-import Analysis.Types
-import Analysis.Common
-import Analysis.Windows.ACE
+import           Analysis.Common
+import           Analysis.Types
+import           Analysis.Windows.ACE
 
-import qualified Data.Parsers.FastText as PF
-import qualified Text.Parser.Char as P
+import qualified Data.Parsers.FastText       as PF
+import qualified Text.Parser.Char            as P
 
 type Node = NodeG [] Text Text
 type KV = HM.HashMap Text Text
@@ -82,8 +82,8 @@ adSystem n = do
     constr <- mkError $ case n ^? ix "type" ./ text of
                   Just "Client" -> Right (Just WindowsClient)
                   Just "Server" -> Right (Just WindowsServer)
-                  Just what -> Left ("Unknown windows os type: " <> what)
-                  Nothing -> Right Nothing
+                  Just what     -> Left ("Unknown windows os type: " <> what)
+                  Nothing       -> Right Nothing
     let v = n ^.. ix "kernel_version" . plate . text . to (T.splitOn ".") . folded . PF.pFold PF.decimal
     mapM_ stell $ do
         c <- constr
@@ -97,11 +97,11 @@ adHives :: Node -> Writer [ConfigInfo] (Maybe (Text, RegistryHive))
 adHives n = do
     let attrs = n ^. attributes
         decodeSid t = case t ^? _SID of
-                          Nothing -> HiveNamed t
+                          Nothing  -> HiveNamed t
                           Just sid -> HiveSID sid
     case (,) <$> attrs ^? attr "id_hive" <*> attrs ^? attr "user" of
         Nothing -> Nothing <$ xmlerror "Invalid hive: " n
-        o -> return (fmap (fmap decodeSid) o)
+        o       -> return (fmap (fmap decodeSid) o)
 
 mkValue :: Attributes Text Text -> Writer [ConfigInfo] (Maybe (Text, RegistryValue))
 mkValue attrs = do
@@ -144,7 +144,7 @@ adUser computersid n = do
                                   <*> (kv ^? ix "password_age" >>= text2Int)
                                   <*> (kv ^? ix "usri2_last_logon" . PF.pFold utctime)
     case muserinfo of
-        Nothing -> xmlerror "Bas user:" n
+        Nothing       -> xmlerror "Bas user:" n
         Just userinfo -> stell (ConfWinUser userinfo)
     forM_ mlogininfo $ \li -> when (_wliNumLogon li > 0) (stell (ConfWinLoginfo li))
     return (fmap _winsid muserinfo)
@@ -220,4 +220,4 @@ extractFromReport n = execWriter $ do
 parseAuditTool :: BSL.ByteString -> [ConfigInfo]
 parseAuditTool d = case d ^? strict . _XML . named "audit_tool" . children of
                        Nothing -> undefined
-                       Just p -> extractFromReport p
+                       Just p  -> extractFromReport p
