@@ -23,8 +23,12 @@ import           Text.XML.Expat.Lens
 import           Text.XML.Expat.Tree         (Attributes, NodeG (..))
 
 import           Analysis.Common
-import           Analysis.Types
+import           Analysis.Types.ConfigInfo
+import           Analysis.Types.Helpers (CError(..))
+import           Analysis.Types.Unix
+import           Analysis.Types.Windows
 import           Analysis.Windows.ACE
+import           Analysis.Windows.SID
 
 import qualified Data.Parsers.FastText       as PF
 import qualified Text.Parser.Char            as P
