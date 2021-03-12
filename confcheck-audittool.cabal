@@ -29,7 +29,6 @@ library
                      , mtl
                      , base16-bytestring
                      , data-textual
-                     , text-printer
                      , parsers
   default-language:    Haskell2010
 
