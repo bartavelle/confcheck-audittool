@@ -2,7 +2,7 @@ flags: {}
 packages:
  - .
  - '../confcheck-types'
-resolver: lts-13.14
+resolver: lts-18.13
 extra-deps:
   - hexpat-lens-0.1.8
   - hexpat-tagsoup-0.1
